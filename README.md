@@ -10,11 +10,17 @@ $ my-github-repos --help
 ```
 
 
+## Development
+
+```sh
+make setup # to install any required tooling
+
+make test
+make build
+```
+
+
 ## Roadmap
-
-- [ ] produce "Hello, world!" executable
-
-- [ ] Makefile with `make build` and `make test`
 
 - [ ] Travis CI integration
 
