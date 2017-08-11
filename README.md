@@ -22,12 +22,6 @@ make build
 
 ## Roadmap
 
-- [ ] Travis CI integration
-
-- [ ] `make test` exits with an error code if [golang/lint](https://github.com/golang/lint) or [`go vet`](https://golang.org/src/cmd/vet/README) identify problems
-
-- [ ] `make fmt` uses [sqs/goreturns](https://github.com/sqs/goreturns), and `make test` triggers `make fmt`
-
 - [ ] use [golang/dep](https://github.com/golang/dep) for dependency management
 
 - [ ] prompt for GitHub API token and persist to ~/.config/jokeyrhyme/go-my-github-repos/config.toml
