@@ -1,4 +1,4 @@
-# go-my-github-repos
+# go-my-github-repos [![Build Status](https://travis-ci.org/jokeyrhyme/go-my-github-repos.svg?branch=master)](https://travis-ci.org/jokeyrhyme/go-my-github-repos)
 
 teaching myself Go whilst tidying and standardising my GitHub repos
 
