@@ -6,8 +6,13 @@ teaching myself Go whilst tidying and standardising my GitHub repos
 ## Usage
 
 ```sh
-$ my-github-repos --help
+$ my-github-repos
 ```
+
+
+## Features
+
+-   prompts for a [personal GitHub token](https://github.com/settings/tokens) and stores it for future use
 
 
 ## Development
@@ -19,12 +24,10 @@ make test
 make build
 ```
 
+This project uses [golang/dep](https://github.com/golang/dep) for dependency management
+
 
 ## Roadmap
-
-- [ ] use [golang/dep](https://github.com/golang/dep) for dependency management
-
-- [ ] prompt for GitHub API token and persist to ~/.config/jokeyrhyme/go-my-github-repos/config.toml
 
 - [ ] list all GitHub repos that I have access to
 
