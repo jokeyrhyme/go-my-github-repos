@@ -11,67 +11,76 @@ import (
 )
 
 const (
-	configFilename = "config.toml"
+	defaultFileName = "config.toml"
 )
 
 // Config is how we persist / restore settings
 type Config struct {
 	GithubToken string `toml:"github_token"`
+
+	dirPath  string
+	fileName string
+	filePath string
 }
 
-func (c *Config) Read() error {
-	configDir, err := getConfigDir()
-	if err != nil {
-		return err
-	}
-	configPath := filepath.Join(configDir, configFilename)
+func NewConfig(filePath string) (*Config, error) {
+	if filePath == "" {
+		configDir, err := getDefaultConfigDir()
+		if err != nil {
+			return nil, err
+		}
 
-	file, err := os.Open(configPath)
+		return &Config{
+			dirPath:  configDir,
+			fileName: defaultFileName,
+			filePath: filepath.Join(configDir, defaultFileName),
+		}, nil
+	}
+
+	return &Config{
+		dirPath:  filepath.Dir(filePath),
+		fileName: filepath.Base(filePath),
+		filePath: filePath,
+	}, nil
+}
+
+func (c *Config) Read() {
+	file, err := os.Open(c.filePath)
 	defer file.Close()
 	if err != nil {
 		// it's okay, return the zero value of Config
-		return nil
 	}
 
 	fileReader := bufio.NewReader(file)
 	_, err = toml.DecodeReader(fileReader, c)
 	if err != nil {
 		// it's okay, return the zero value of Config
-		return nil
 	}
-
-	return nil
 }
 
 func (c *Config) Write() error {
-	configDir, err := getConfigDir()
+	err := os.MkdirAll(c.dirPath, os.FileMode(0700))
 	if err != nil {
-		return err
-	}
-	configPath := filepath.Join(configDir, configFilename)
-
-	err = os.MkdirAll(configDir, os.FileMode(0700))
-	if err != nil {
-		return fmt.Errorf("error creating directories: %v %v", configDir, err)
+		return fmt.Errorf("error creating directories: %v %v", c.dirPath, err)
 	}
 
-	file, err := os.OpenFile(configPath, os.O_CREATE|os.O_RDWR, os.FileMode(0600))
+	file, err := os.OpenFile(c.filePath, os.O_CREATE|os.O_RDWR, os.FileMode(0600))
 	defer file.Close()
 	if err != nil {
-		return fmt.Errorf("error creating file: %v %v", configPath, err)
+		return fmt.Errorf("error creating file: %v %v", c.filePath, err)
 	}
 
 	fileWriter := bufio.NewWriter(file)
 	encoder := toml.NewEncoder(fileWriter)
 	err = encoder.Encode(c)
 	if err != nil {
-		return fmt.Errorf("error writing config: %v %v", configPath, err)
+		return fmt.Errorf("error writing config: %v %v", c.filePath, err)
 	}
 
 	return nil
 }
 
-func getConfigDir() (string, error) {
+func getDefaultConfigDir() (string, error) {
 	home, ok := os.LookupEnv("HOME")
 	if !ok {
 		return "", errors.New("no HOME environment variable found")

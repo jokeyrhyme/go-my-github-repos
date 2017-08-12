@@ -12,13 +12,13 @@ import (
 )
 
 func main() {
-	cfg := &config.Config{}
-
-	err := cfg.Read()
+	cfg, err := config.NewConfig("")
 	if err != nil {
-		fmt.Printf("error reading config: %v", err)
+		fmt.Printf("error initialising config: %v", err)
 		os.Exit(1)
 	}
+
+	cfg.Read()
 
 	if cfg.GithubToken == "" {
 		fmt.Println(`
@@ -27,7 +27,8 @@ https://github.com/settings/tokens
 `)
 
 		fmt.Print("Enter GitHub token: ")
-		input, err := terminal.ReadPassword(syscall.Stdin)
+		var input []byte // avoid declaring a shadow `err` below
+		input, err = terminal.ReadPassword(syscall.Stdin)
 		if err != nil {
 			fmt.Printf("error reading password: %v", err)
 			os.Exit(1)
