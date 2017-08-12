@@ -21,7 +21,10 @@ func makeTempDir(t *testing.T) (string, func()) {
 		t.Fatalf("makeTempDir(): %v", err)
 	}
 	return dir, func() {
-		os.RemoveAll(dir)
+		err = os.RemoveAll(dir)
+		if err != nil {
+			t.Fatalf("makeTempDir(): %v", err)
+		}
 	}
 }
 

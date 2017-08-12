@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 
@@ -23,6 +24,10 @@ type Config struct {
 	filePath string
 }
 
+/*
+NewConfig initialises a Config for you,
+using defaults if you do not supply `filePath`
+*/
 func NewConfig(filePath string) (*Config, error) {
 	if filePath == "" {
 		configDir, err := getDefaultConfigDir()
@@ -46,15 +51,22 @@ func NewConfig(filePath string) (*Config, error) {
 
 func (c *Config) Read() {
 	file, err := os.Open(c.filePath)
-	defer file.Close()
 	if err != nil {
-		// it's okay, return the zero value of Config
+		// in case of error, use defaults
+		return
 	}
+	defer func() {
+		err = file.Close()
+		if err != nil {
+			log.Printf("error closing file after read %v: %v", c.filePath, err)
+		}
+	}()
 
 	fileReader := bufio.NewReader(file)
 	_, err = toml.DecodeReader(fileReader, c)
 	if err != nil {
-		// it's okay, return the zero value of Config
+		// in case of error, use defaults
+		return
 	}
 }
 
@@ -65,10 +77,15 @@ func (c *Config) Write() error {
 	}
 
 	file, err := os.OpenFile(c.filePath, os.O_CREATE|os.O_RDWR, os.FileMode(0600))
-	defer file.Close()
 	if err != nil {
 		return fmt.Errorf("error creating file: %v %v", c.filePath, err)
 	}
+	defer func() {
+		err = file.Close()
+		if err != nil {
+			log.Printf("error closing file after write %v: %v", c.filePath, err)
+		}
+	}()
 
 	fileWriter := bufio.NewWriter(file)
 	encoder := toml.NewEncoder(fileWriter)
