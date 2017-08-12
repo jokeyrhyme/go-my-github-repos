@@ -8,12 +8,13 @@ fmt:
 	goreturns -b -l -local $(LOCAL_PREFIX) -w ./cmd/**/*.go ./pkg/**/*.go
 
 lint: 
-	gometalinter ./cmd/...
+	gometalinter ./cmd/... ./pkg/...
 
 setup:
 	go get -u github.com/alecthomas/gometalinter
 	gometalinter --install
 	go get -u github.com/golang/dep/cmd/dep
+	dep ensure
 	go get -u golang.org/x/tools/cmd/goimports
 	go get -u sourcegraph.com/sqs/goreturns
 
