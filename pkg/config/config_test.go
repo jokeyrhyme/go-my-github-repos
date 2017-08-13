@@ -48,6 +48,12 @@ func TestNewConfigWithDir(t *testing.T) {
 	filePath := filepath.Join(dir, "config.toml")
 	cfg := makeNewConfig(t, filePath)
 
+	if cfg.GithubToken != "" {
+		t.Errorf("cfg.GithubToken: got=%v want=%v", cfg.GithubToken, "")
+	}
+	if cfg.IsDirty {
+		t.Errorf("cfg.IsDirty: got=%v want=%v", cfg.IsDirty, false)
+	}
 	if cfg.dirPath != dir {
 		t.Errorf("cfg.fileName: got=%v want=%v", cfg.dirPath, dir)
 	}

@@ -24,6 +24,10 @@ func main() {
 		fmt.Println(`
 Create a GitHub token here:
 https://github.com/settings/tokens
+
+Be sure to enable:
+-   repo.public_repo
+-   admin:repo_hook
 `)
 
 		fmt.Print("Enter GitHub token: ")
@@ -37,13 +41,16 @@ https://github.com/settings/tokens
 
 		token := strings.Trim(string(input), " ")
 		cfg.GithubToken = token
+		cfg.IsDirty = true
 	} else {
 		fmt.Println("using previous GitHub token")
 	}
 
-	err = cfg.Write()
-	if err != nil {
-		fmt.Printf("error writing config: %v", err)
-		os.Exit(1)
+	if cfg.IsDirty {
+		err = cfg.Write()
+		if err != nil {
+			fmt.Printf("error writing config: %v", err)
+			os.Exit(1)
+		}
 	}
 }

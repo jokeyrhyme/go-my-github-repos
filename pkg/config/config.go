@@ -19,6 +19,8 @@ const (
 type Config struct {
 	GithubToken string `toml:"github_token"`
 
+	IsDirty bool
+
 	dirPath  string
 	fileName string
 	filePath string
