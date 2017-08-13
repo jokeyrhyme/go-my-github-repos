@@ -14,6 +14,8 @@ $ my-github-repos
 
 -   prompts for a [personal GitHub token](https://github.com/settings/tokens) and stores it for future use
 
+-   lists all public, non-fork, non-organisation GitHub repos that I own
+
 
 ## Development
 
@@ -28,9 +30,5 @@ This project uses [golang/dep](https://github.com/golang/dep) for dependency man
 
 
 ## Roadmap
-
-- [ ] list all GitHub repos that I have access to
-
-- [ ] identify GitHub repos that are public and in my namespace
 
 - [ ] ensure hook for [facebook/mention-bot](https://github.com/facebook/mention-bot) is installed
